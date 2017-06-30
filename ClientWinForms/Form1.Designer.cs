@@ -31,6 +31,7 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btn_SendMessage = new System.Windows.Forms.Button();
+            this.UserList = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -40,8 +41,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(2, 2);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(485, 453);
-            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.TabIndex = 10;
             this.richTextBox1.Text = "";
             // 
             // textBox1
@@ -51,7 +53,8 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(485, 34);
-            this.textBox1.TabIndex = 1;
+            this.textBox1.TabIndex = 0;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // btn_SendMessage
             // 
@@ -64,11 +67,21 @@
             this.btn_SendMessage.UseVisualStyleBackColor = true;
             this.btn_SendMessage.Click += new System.EventHandler(this.btn_SendMessage_Click);
             // 
+            // UserList
+            // 
+            this.UserList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.UserList.FormattingEnabled = true;
+            this.UserList.Location = new System.Drawing.Point(493, 2);
+            this.UserList.Name = "UserList";
+            this.UserList.Size = new System.Drawing.Size(144, 459);
+            this.UserList.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 499);
+            this.Controls.Add(this.UserList);
             this.Controls.Add(this.btn_SendMessage);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.richTextBox1);
@@ -85,6 +98,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btn_SendMessage;
+        private System.Windows.Forms.ListBox UserList;
     }
 }
 

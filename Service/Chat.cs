@@ -15,14 +15,10 @@ namespace Service
         public void Join(User user)
         {
             _users.Add(OperationContext.Current.GetCallbackChannel<IChatCallBack>(), user);
-        }
-
-        public void Leave(User user)
-        {
-            IChatCallBack key = null;
-            key = _users.FirstOrDefault(x => x.Value == user).Key;
-            if (key != null)
-                _users.Remove(key);
+            foreach (var otherUser in _users.Keys)
+            {
+                otherUser.GetUserList(_users.Select(p => p.Value).ToList());
+            }
         }
 
         public void Send(string message)
@@ -30,17 +26,42 @@ namespace Service
             User user = null;
             var connection = OperationContext.Current.GetCallbackChannel<IChatCallBack>();
             if (!_users.TryGetValue(connection, out user))
-                return;
-            var result = $"[{DateTime.Now}]:{user.UserName}: {message}"; //string.Format("You entered: {0}", message);
+                return;          
 
             foreach (var otherUser in _users.Keys)
             {
-                //if (otherUser == connection)
-                //    continue;
-                otherUser.GetMessages(result);
+                otherUser.GetMessages(user, message);
             }
+        }
 
-            //OperationContext.Current.GetCallbackChannel<IChatCallBack>().GetMessages(result);
+        public void Leave(User user)
+        {
+            IChatCallBack key = null;
+            key = _users.FirstOrDefault(x => x.Value == user).Key;
+            if (key != null)
+            {
+                _users.Remove(key);
+                foreach (var otherUser in _users.Keys)
+                {
+                    otherUser.GetUserList(_users.Select(p => p.Value).ToList());
+                }
+            }
+        }
+
+        public void Whisper(User toUser, string message)
+        {
+            var connection = OperationContext.Current.GetCallbackChannel<IChatCallBack>();
+            User user = null;
+            if (!_users.TryGetValue(connection, out user))
+            {
+
+            }
+                IChatCallBack toUserConnection = null;
+            toUserConnection = _users.Where(x => x.Value == toUser).FirstOrDefault().Key;
+            if (toUserConnection!=null)
+            {
+                toUserConnection.ReceiveWhisper(user,message);
+            }
         }
     }
 }

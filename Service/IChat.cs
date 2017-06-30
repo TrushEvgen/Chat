@@ -18,16 +18,22 @@ namespace Service
         void Join(User user);
 
         [OperationContract(IsOneWay = true)]
+        void Whisper(User toUser, string message);
+
+        [OperationContract(IsOneWay = true)]
         void Leave(User user);
     }
 
     public interface IChatCallBack
     {
         [OperationContract(IsOneWay =true)]
-        void GetMessages(string text);
+        void GetMessages(User user, string text);
 
         [OperationContract(IsOneWay = true)]
-        void GetUserList(List<string> users);
+        void GetUserList(List<User> users);
+
+        [OperationContract(IsOneWay =true)]
+        void ReceiveWhisper(User fromUser, string message);
     }
     
 }

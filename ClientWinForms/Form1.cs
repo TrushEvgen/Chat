@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ClientWinForms.ChatService;
 
 namespace ClientWinForms
 {
@@ -40,19 +41,57 @@ namespace ClientWinForms
 
         }
 
-        public void GetMessages(string text)
-        {
-            richTextBox1.Text += $"{Environment.NewLine} {text}";
-        }
+       
 
         private void btn_SendMessage_Click(object sender, EventArgs e)
         {
             chatClient.Send(textBox1.Text);
+            textBox1.Text = string.Empty;
         }
 
         public void GetUserList(string[] users)
         {
             throw new NotImplementedException();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btn_SendMessage_Click(null, null);
+                e.Handled = false;
+            }
+            
+        }
+
+        public void GetMessages(User user, string text)
+        {
+            richTextBox1.Text += $"{Environment.NewLine} {text}";
+        }
+        private List<User> usersList = new List<User>();
+        public void GetUserList(List<User> users)
+        {
+            //if (usersList.Count() == 0)
+            //    users.CopyTo(usersList.ToArray(), 0);
+            //else
+            //{
+            //    var deletedList = users.Join(usersList,x=>x.)
+            //}
+        }
+
+        public void ReceiveWhisper(User fromUser, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetUserList(User[] users)
+        {
+            if (usersList.Count() == 0)
+                users.CopyTo(usersList.ToArray(), 0);
+            else
+            {
+                //var deletedList = users.ToList<User>().Join)
+            }
         }
     }
 }
