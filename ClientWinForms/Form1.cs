@@ -35,10 +35,8 @@ namespace ClientWinForms
             instanceContext = new InstanceContext(this);
             chatClient = new ChatService.ChatClient(instanceContext, "NetTcpBinding_IChat");
             chatClient.Join(User);
-          
-            
 
-
+            FormClosing += delegate { chatClient.Leave(User); };        
         }
 
        
@@ -66,19 +64,9 @@ namespace ClientWinForms
 
         public void GetMessages(User user, string text)
         {
-            richTextBox1.Text += $"{Environment.NewLine} {text}";
+            richTextBox1.Text += $"{Environment.NewLine} [{DateTime.Now}]: [{user.UserName}] {text}";
         }
-        private List<User> usersList = new List<User>();
-        public void GetUserList(List<User> users)
-        {
-            //if (usersList.Count() == 0)
-            //    users.CopyTo(usersList.ToArray(), 0);
-            //else
-            //{
-            //    var deletedList = users.Join(usersList,x=>x.)
-            //}
-        }
-
+        
         public void ReceiveWhisper(User fromUser, string message)
         {
             throw new NotImplementedException();
@@ -86,12 +74,24 @@ namespace ClientWinForms
 
         public void GetUserList(User[] users)
         {
-            if (usersList.Count() == 0)
-                users.CopyTo(usersList.ToArray(), 0);
-            else
+            foreach (User usr in users)
             {
-                //var deletedList = users.ToList<User>().Join)
+                UserList.Items.Add(usr.UserName);
             }
+        }
+
+        public void UserJoined(User user)
+        {
+            richTextBox1.Text += $"{Environment.NewLine} Пользователь {user.UserName} подключился";
+            UserList.Items.Add(user.UserName);
+
+        }
+
+        public void UserLeave(User user)
+        {
+            richTextBox1.Text += $"{Environment.NewLine} Пользователь {user.UserName} отключился";
+            UserList.Items.Remove(user.UserName);
+
         }
     }
 }

@@ -14,11 +14,18 @@ namespace Service
         Dictionary<IChatCallBack, User> _users = new Dictionary<IChatCallBack, User>();
         public void Join(User user)
         {
-            _users.Add(OperationContext.Current.GetCallbackChannel<IChatCallBack>(), user);
+            IChatCallBack chatCallBack = OperationContext.Current.GetCallbackChannel<IChatCallBack>();
+            //отправляем всем сообщение что мы зашли в чат
             foreach (var otherUser in _users.Keys)
             {
-                otherUser.GetUserList(_users.Select(p => p.Value).ToList());
+                otherUser.UserJoined(user);
             }
+            _users.Add(chatCallBack, user);
+            chatCallBack.GetUserList(_users.Select(p => p.Value).ToList());
+            //foreach (var otherUser in _users.Keys)
+            //{
+            //    otherUser.GetUserList(_users.Select(p => p.Value).ToList());
+            //}
         }
 
         public void Send(string message)
@@ -37,13 +44,16 @@ namespace Service
         public void Leave(User user)
         {
             IChatCallBack key = null;
-            key = _users.FirstOrDefault(x => x.Value == user).Key;
+            key = OperationContext.Current.GetCallbackChannel<IChatCallBack>();    
+            Console.WriteLine($"User {user.UserName} leave");
+            //Console.WriteLine($"{user.UserName} key = {key}");
+
             if (key != null)
             {
                 _users.Remove(key);
                 foreach (var otherUser in _users.Keys)
                 {
-                    otherUser.GetUserList(_users.Select(p => p.Value).ToList());
+                    otherUser.UserLeave(user);
                 }
             }
         }

@@ -54,6 +54,12 @@
   <wsdl:message name="IChat_GetUserList_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:GetUserList" />
   </wsdl:message>
+  <wsdl:message name="IChat_UserJoined_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:UserJoined" />
+  </wsdl:message>
+  <wsdl:message name="IChat_UserLeave_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:UserLeave" />
+  </wsdl:message>
   <wsdl:message name="IChat_ReceiveWhisper_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:ReceiveWhisper" />
   </wsdl:message>
@@ -75,6 +81,12 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserList">
       <wsdl:output wsaw:Action="http://tempuri.org/IChat/GetUserList" message="tns:IChat_GetUserList_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UserJoined">
+      <wsdl:output wsaw:Action="http://tempuri.org/IChat/UserJoined" message="tns:IChat_UserJoined_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UserLeave">
+      <wsdl:output wsaw:Action="http://tempuri.org/IChat/UserLeave" message="tns:IChat_UserLeave_OutputCallbackMessage" />
     </wsdl:operation>
     <wsdl:operation name="ReceiveWhisper">
       <wsdl:output wsaw:Action="http://tempuri.org/IChat/ReceiveWhisper" message="tns:IChat_ReceiveWhisper_OutputCallbackMessage" />
@@ -119,6 +131,18 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UserJoined">
+      <soap12:operation soapAction="http://tempuri.org/IChat/UserJoined" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserLeave">
+      <soap12:operation soapAction="http://tempuri.org/IChat/UserLeave" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ReceiveWhisper">
       <soap12:operation soapAction="http://tempuri.org/IChat/ReceiveWhisper" style="document" />
       <wsdl:output>
@@ -132,7 +156,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8081/Service</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>Trush_EG@local.st.by</Upn>
+          <Upn>DESKTOP-IGKTK06\trush</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

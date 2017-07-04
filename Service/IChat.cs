@@ -32,6 +32,12 @@ namespace Service
         [OperationContract(IsOneWay = true)]
         void GetUserList(List<User> users);
 
+        [OperationContract(IsOneWay = true)]
+        void UserJoined(User user);
+
+        [OperationContract(IsOneWay = true)]
+        void UserLeave(User user);
+
         [OperationContract(IsOneWay =true)]
         void ReceiveWhisper(User fromUser, string message);
     }

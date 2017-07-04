@@ -96,6 +96,12 @@ namespace ClientWinForms.ChatService {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChat/GetUserList")]
         void GetUserList(ClientWinForms.ChatService.User[] users);
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChat/UserJoined")]
+        void UserJoined(ClientWinForms.ChatService.User user);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChat/UserLeave")]
+        void UserLeave(ClientWinForms.ChatService.User user);
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChat/ReceiveWhisper")]
         void ReceiveWhisper(ClientWinForms.ChatService.User fromUser, string message);
     }
