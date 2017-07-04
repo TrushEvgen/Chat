@@ -19,7 +19,33 @@ namespace ClientWinForms
             InitializeComponent();
         }
 
-        ChatService.ChatClient chatClient = null;
+        Timer checkCommunicationState = new Timer();        
+
+        private ChatClient chatClient;
+
+        public ChatClient ChatClient
+        {
+            get
+            {
+                if (chatClient == null)
+                    return null;
+                switch (chatClient.State)
+                {
+                    case CommunicationState.Created:
+                        break;
+                    case CommunicationState.Opened:
+                        return chatClient;
+                    case CommunicationState.Closed:
+                    case CommunicationState.Faulted:                        
+                        chatClient = null;
+                        checkCommunicationState.Stop();                    
+                        break;
+                }               
+                return chatClient;
+            }
+            set { chatClient = value; }
+        }
+
 
         InstanceContext instanceContext = null;
 
@@ -33,23 +59,35 @@ namespace ClientWinForms
 
             User.UserName = unf.User;
             instanceContext = new InstanceContext(this);
-            chatClient = new ChatService.ChatClient(instanceContext, "NetTcpBinding_IChat");
-            chatClient.Join(User);
+            ChatClient = new ChatService.ChatClient(instanceContext, "NetTcpBinding_IChat");
 
-            FormClosing += delegate { chatClient.Leave(User); };        
+            checkCommunicationState.Interval = 10 * 1000;
+            checkCommunicationState.Tick += delegate
+            {
+                if (ChatClient != null)
+                {
+                    if (ChatClient.State == CommunicationState.Closed || ChatClient.State == CommunicationState.Faulted)
+                    {
+                        richTextBox1.AppendText($"{Environment.NewLine} Соединение разорвано");
+                        checkCommunicationState.Stop();
+                    }
+                }
+            };
+            checkCommunicationState.Start();
+            ChatClient?.Join(User);
+
+            FormClosing += delegate { ChatClient?.Leave(User); chatClient?.Close(); };        
         }
 
        
 
         private void btn_SendMessage_Click(object sender, EventArgs e)
         {
-            chatClient.Send(textBox1.Text);
-            textBox1.Text = string.Empty;
-        }
-
-        public void GetUserList(string[] users)
-        {
-            throw new NotImplementedException();
+            if (ChatClient != null)
+            {
+                ChatClient?.Send(textBox1.Text);
+                textBox1.Text = string.Empty;
+            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)

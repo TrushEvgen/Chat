@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Service
 {
-    // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени интерфейса "IChat" в коде и файле конфигурации.
     [ServiceContract(CallbackContract =typeof(IChatCallBack))]
     public interface IChat
     {

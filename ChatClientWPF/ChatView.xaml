@@ -1,0 +1,25 @@
+﻿<Window x:Class="ChatClientWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatClientWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="137"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <RichTextBox Grid.Row="0" Grid.Column="1" x:Name="ChatBox" IsReadOnly="True"></RichTextBox>
+        <ListView Grid.Row="0" Grid.Column="1" x:Name="OnlineClients"></ListView>
+        <TextBox Grid.Row="1" Grid.Column="0" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True"
+                 ></TextBox>
+        <Button Grid.Row="1" Grid.Column="1">Отправить</Button>
+    </Grid>
+</Window>
