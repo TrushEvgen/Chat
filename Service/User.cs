@@ -18,6 +18,6 @@ namespace Service
             get { return userName; }
             set { userName = value; }
         }
-
+      
     }
 }

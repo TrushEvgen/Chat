@@ -16,10 +16,17 @@ namespace ChatClientWPF
         
         public ChatViewModel()
         {
-            host = new ChatClient(new System.ServiceModel.InstanceContext(this));
+            host = new ChatClient(new System.ServiceModel.InstanceContext(this), "NetTcpBinding_IChat");
             
             Host.Join(new User() { UserName = "Admin" });
+            UserList.CollectionChanged += MessageList_CollectionChanged;          
         }
+
+        private void MessageList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+          
+        }
+
         private FlowDocument mainChatText = new FlowDocument();
 
         public FlowDocument MainChatText
@@ -55,7 +62,8 @@ namespace ChatClientWPF
 
         public void GetMessages(User user, string text)
         {
-            throw new NotImplementedException();
+            MessageList.Add(new Message(text,user));
+            //OnPropertyChanged(nameof(MessageList)); 
         }
 
         public void GetUserList(User[] users)
@@ -67,6 +75,7 @@ namespace ChatClientWPF
         public void UserJoined(User user)
         {
             UserList.Add(user);
+            MessageList.Add(new Message($"Пользователь {user.UserName} подключился"));
             //GetUserList(UserList.ToArray());
             //OnPropertyChanged(nameof(UserList));
             //Click(user.UserName);
@@ -74,7 +83,11 @@ namespace ChatClientWPF
 
         public void UserLeave(User user)
         {
-            throw new NotImplementedException();
+            User newUser = UserList[1];
+            UserList.Remove(newUser);
+            //user.re
+            MessageList.Add(new Message($"Пользователь {user.UserName} отключился"));
+
         }
 
         public void ReceiveWhisper(User fromUser, string message)
@@ -103,6 +116,15 @@ namespace ChatClientWPF
             get { return userList ?? (userList = new ObservableCollection<User>()); }
             set { userList = value; }
         }
+
+        private ObservableCollection<Message> messageList;
+
+        public ObservableCollection<Message> MessageList
+        {
+            get { return messageList ?? (messageList = new ObservableCollection<Message>()); }
+            set { messageList = value; }
+        }
+
 
     }
 }
