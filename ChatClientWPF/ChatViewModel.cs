@@ -82,10 +82,11 @@ namespace ChatClientWPF
         }
 
         public void UserLeave(User user)
-        {
-            User newUser = UserList[1];
-            UserList.Remove(newUser);
+        {       
+            UserList.Remove(user);
             //user.re
+            User usr = new User();
+            usr.UserGuid = Guid.NewGuid();
             MessageList.Add(new Message($"Пользователь {user.UserName} отключился"));
 
         }

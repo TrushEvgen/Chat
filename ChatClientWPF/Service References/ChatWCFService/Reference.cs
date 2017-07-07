@@ -23,6 +23,9 @@ namespace ChatClientWPF.ChatWCFService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid UserGuidField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UserNameField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -32,6 +35,19 @@ namespace ChatClientWPF.ChatWCFService {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid UserGuid {
+            get {
+                return this.UserGuidField;
+            }
+            set {
+                if ((this.UserGuidField.Equals(value) != true)) {
+                    this.UserGuidField = value;
+                    this.RaisePropertyChanged("UserGuid");
+                }
             }
         }
         
