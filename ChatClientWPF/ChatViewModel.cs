@@ -1,4 +1,5 @@
 ﻿using ChatClientWPF.ChatWCFService;
+using ChatClientWPF.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,38 +20,48 @@ namespace ChatClientWPF
             host = new ChatClient(new System.ServiceModel.InstanceContext(this), "NetTcpBinding_IChat");
             
             Host.Join(new User() { UserName = "Admin" });
-            UserList.CollectionChanged += MessageList_CollectionChanged;          
         }
-
-        private void MessageList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-          
-        }
-
-        private FlowDocument mainChatText = new FlowDocument();
-
-        public FlowDocument MainChatText
-        {
-            get { return mainChatText; }
-            //set
-            //{
-            //    mainChatText.AppendLine(value);
-            //    OnPropertyChanged(nameof(MainChatText));
-            //}
-        }
-         public void Click(string text)
-        {       
-               
-            Paragraph newText = new Paragraph(new Run(text));
-            mainChatText.Blocks.Add(newText);
-            OnPropertyChanged(nameof(MainChatText));
-        }
+        #region Property
         private ChatClient host;
 
         public ChatClient Host
         {
             get { return host; }
             set { host = value; }
+        }
+        private ObservableCollection<User> userList;
+
+        public ObservableCollection<User> UserList
+        {
+            get { return userList ?? (userList = new ObservableCollection<User>()); }
+            set { userList = value; }
+        }
+
+        private ObservableCollection<Message> messageList;
+
+        public ObservableCollection<Message> MessageList
+        {
+            get { return messageList ?? (messageList = new ObservableCollection<Message>()); }
+            set { messageList = value; }
+        }
+
+        private RelayCommand _sendMessage;
+
+        public RelayCommand SendMessage
+        {
+            get
+            {
+                return _sendMessage ??
+                    (_sendMessage = new RelayCommand(SendMessageClick));
+            }
+        }
+
+        private string _messageString;
+
+        public string MessageString
+        {
+            get { return _messageString; }
+            set { _messageString = value; }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -59,6 +70,7 @@ namespace ChatClientWPF
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+        #endregion
 
         public void GetMessages(User user, string text)
         {
@@ -82,13 +94,11 @@ namespace ChatClientWPF
         }
 
         public void UserLeave(User user)
-        {       
-            UserList.Remove(user);
-            //user.re
-            User usr = new User();
-            usr.UserGuid = Guid.NewGuid();
+        {
+            User userFromList = null;
+            userFromList = userList.Where(x => x.UserName == user.UserName).FirstOrDefault();
+            UserList.Remove(userFromList);    
             MessageList.Add(new Message($"Пользователь {user.UserName} отключился"));
-
         }
 
         public void ReceiveWhisper(User fromUser, string message)
@@ -96,36 +106,16 @@ namespace ChatClientWPF
             throw new NotImplementedException();
         }
 
-        //private List<User> userList;
+    
 
-        //public List<User> UserList
-        //{
-        //    get { return userList; }
-        //    set
-        //    {
-        //        userList = value;
-        //        OnPropertyChanged(nameof(UserList));
-        //    }
-        //}
-
-        //public ObservableCollection<User> UserList = new ObservableCollection<User>();
-
-        private ObservableCollection<User> userList;
-
-        public ObservableCollection<User> UserList
+        private void SendMessageClick(object message)
         {
-            get { return userList ?? (userList = new ObservableCollection<User>()); }
-            set { userList = value; }
+            if (Host.State == System.ServiceModel.CommunicationState.Opened)
+            {
+                Host.Send(MessageString);
+                MessageString = string.Empty;
+                OnPropertyChanged(nameof(MessageString));
+            }
         }
-
-        private ObservableCollection<Message> messageList;
-
-        public ObservableCollection<Message> MessageList
-        {
-            get { return messageList ?? (messageList = new ObservableCollection<Message>()); }
-            set { messageList = value; }
-        }
-
-
     }
 }

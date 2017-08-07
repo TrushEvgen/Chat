@@ -56,7 +56,9 @@
             Grid.Column="0"
             AcceptsReturn="True"
             TextWrapping="Wrap"
-            VerticalScrollBarVisibility="Auto" />
-        <Button Grid.Row="1" Grid.Column="1">Отправить</Button>
+            VerticalScrollBarVisibility="Auto" 
+            Text="{Binding MessageString}"/>
+        <Button Grid.Row="1" Grid.Column="1"
+                Command="{Binding SendMessage}">Отправить</Button>
     </Grid>
 </Window>
