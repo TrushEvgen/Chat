@@ -14,28 +14,36 @@ namespace ChatClientWPF
 {
     public class ChatViewModel : INotifyPropertyChanged,IChatCallback
     {
-        
-        public ChatViewModel()
+        private readonly ChatModel _ChatModel;
+        public ChatViewModel(ChatModel chatModel)
         {
-            host = new ChatClient(new System.ServiceModel.InstanceContext(this), "NetTcpBinding_IChat");
+            _ChatModel = chatModel;
+            _ChatModel.Host = new ChatClient(new System.ServiceModel.InstanceContext(this), "NetTcpBinding_IChat");
+            _ChatModel.Host.Join(new User() { UserName = "Admin" });
+            //host = new ChatClient(new System.ServiceModel.InstanceContext(this), "NetTcpBinding_IChat");
             
-            Host.Join(new User() { UserName = "Admin" });
+            //Host.Join(new User() { UserName = "Admin" });
         }
+
+        public ChatViewModel() : this(new ChatModel())
+        {          
+        }
+
         #region Property
-        private ChatClient host;
+        //private ChatClient host;
 
-        public ChatClient Host
-        {
-            get { return host; }
-            set { host = value; }
-        }
-        private ObservableCollection<User> userList;
+        //public ChatClient Host
+        //{
+        //    get { return host; }
+        //    set { host = value; }
+        //}
+        //private ObservableCollection<User> userList;
 
-        public ObservableCollection<User> UserList
-        {
-            get { return userList ?? (userList = new ObservableCollection<User>()); }
-            set { userList = value; }
-        }
+        //public ObservableCollection<User> UserList
+        //{
+        //    get { return userList ?? (userList = new ObservableCollection<User>()); }
+        //    set { userList = value; }
+        //}
 
         private ObservableCollection<Message> messageList;
 
@@ -81,12 +89,12 @@ namespace ChatClientWPF
         public void GetUserList(User[] users)
         {
             foreach (User item in users)
-                UserList.Add(item);
+                _ChatModel.UserList.Add(item);
         }
 
         public void UserJoined(User user)
         {
-            UserList.Add(user);
+            _ChatModel.UserList.Add(user);
             MessageList.Add(new Message($"Пользователь {user.UserName} подключился"));
             //GetUserList(UserList.ToArray());
             //OnPropertyChanged(nameof(UserList));
@@ -96,8 +104,8 @@ namespace ChatClientWPF
         public void UserLeave(User user)
         {
             User userFromList = null;
-            userFromList = userList.Where(x => x.UserName == user.UserName).FirstOrDefault();
-            UserList.Remove(userFromList);    
+            userFromList = _ChatModel.UserList.Where(x => x.UserName == user.UserName).FirstOrDefault();
+            _ChatModel.UserList.Remove(userFromList);    
             MessageList.Add(new Message($"Пользователь {user.UserName} отключился"));
         }
 
@@ -110,9 +118,9 @@ namespace ChatClientWPF
 
         private void SendMessageClick(object message)
         {
-            if (Host.State == System.ServiceModel.CommunicationState.Opened)
+            if (_ChatModel.Host.State == System.ServiceModel.CommunicationState.Opened)
             {
-                Host.Send(MessageString);
+                _ChatModel.Host.Send(MessageString);
                 MessageString = string.Empty;
                 OnPropertyChanged(nameof(MessageString));
             }

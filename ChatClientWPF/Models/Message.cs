@@ -44,7 +44,7 @@ namespace ChatClientWPF
         public User User
         {
             get { return _user; }
-            set { _user = value; }
+            private set { _user = value; }
         }
         public override string ToString()
         {

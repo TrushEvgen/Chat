@@ -1,6 +1,7 @@
 ﻿using ChatClientWPF.ChatWCFService;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -27,11 +28,11 @@ namespace ChatClientWPF
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
-        private List<User> userList;
+        private ObservableCollection<User> userList;
 
-        public List<User> UserList
+        public ObservableCollection<User> UserList
         {
-            get { return userList; }
+            get { return userList ?? (userList = new ObservableCollection<User>()); }
             set
             {
                 userList = value;

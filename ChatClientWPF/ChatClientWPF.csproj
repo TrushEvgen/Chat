@@ -59,7 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="ChatViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Message.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Service References\ChatWCFService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -73,7 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ChatModel.cs" />
+    <Compile Include="Models\ChatModel.cs" />
     <Compile Include="ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
       <SubType>Code</SubType>
